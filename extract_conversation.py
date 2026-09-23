@@ -25,9 +25,11 @@ def extract_conversation(file_path):
     
     for p in paragraphs:
         # Extract speaker name
-        speaker_element = p.find('span', {'data-speaker': 'true'})
-        if speaker_element and speaker_element.find('span'):
-            speaker = speaker_element.find('span').get_text()
+        # New layout: name is in a <button>; old layout: name is in a <span>
+        speaker_span = p.find('span', {'data-speaker': 'true'})
+        speaker_element = speaker_span and (speaker_span.find('button') or speaker_span.find('span'))
+        if speaker_element:
+            speaker = speaker_element.get_text().strip()
             
             # If we have a new speaker, save the previous one's text
             if current_speaker and current_speaker != speaker and current_text:

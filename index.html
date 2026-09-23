@@ -137,7 +137,7 @@
         <footer>
             <p>This tool works entirely in your browser. No data is sent to any server.</p>
             <p style="margin-top: 10px; font-size: 14px;">
-                <a href="https://github.com/barshy/tldv-transcript-extractor-" target="_blank" style="color: #3498db; text-decoration: none;">
+                <a href="https://github.com/gschagas12/tldv-transcript-extractor" target="_blank" style="color: #3498db; text-decoration: none;">
                     View on GitHub
                 </a> | Made with ❤️ by <a href="https://www.linkedin.com/in/barsh/" target="_blank" style="color: #3498db; text-decoration: none;">Fernando Barsh</a>
             </p>
@@ -159,11 +159,15 @@
         // Extract conversation from HTML
         function extractConversation(html) {
             // Parse the HTML
+            // TLDV now nests a <div> (the speaker rename button) inside each <p>.
+            // The HTML parser auto-closes a <p> when it meets a <div>, which splits
+            // speaker and words apart, so swap <p> for <section> before parsing.
+            const safeHtml = html.replace(/<p(\s|>)/gi, '<section$1').replace(/<\/p>/gi, '</section>');
             const parser = new DOMParser();
-            const doc = parser.parseFromString(html, 'text/html');
-            
+            const doc = parser.parseFromString(safeHtml, 'text/html');
+
             // Find all paragraph elements with data-index attribute
-            const paragraphs = doc.querySelectorAll('p[data-index]');
+            const paragraphs = doc.querySelectorAll('section[data-index]');
             
             // Process each paragraph to extract speaker and text
             const conversation = [];
@@ -172,7 +176,10 @@
             
             paragraphs.forEach(p => {
                 // Extract speaker name
-                const speakerElement = p.querySelector('span[data-speaker="true"] span');
+                // New layout: name is in a <button>; old layout: name is in a <span>
+                const speakerSpan = p.querySelector('span[data-speaker="true"]');
+                const speakerElement = speakerSpan &&
+                    (speakerSpan.querySelector('button') || speakerSpan.querySelector('span'));
                 if (speakerElement) {
                     const speaker = speakerElement.textContent.trim();
                     
