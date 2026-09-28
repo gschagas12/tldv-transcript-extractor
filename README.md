@@ -19,6 +19,16 @@ Speaker 2: It. Listen, listen. Now and Another another project too. Pretty cool.
 Speaker 1: Um, what are you talking about this page?
 ```
 
+## 🔖 Bookmarklet (recommended for long meetings)
+
+TLDV only fills in the transcript paragraphs near the visible area, so copying the `transcript-container` HTML of a long meeting gets only part of it. The bookmarklet scrolls through every paragraph, collects the text, and offers **Copy** / **Download .txt** buttons.
+
+1. Open the [bookmarklet page](https://gschagas12.github.io/tldv-transcript-extractor/bookmarklet.html) and drag the button to your bookmarks bar
+2. Open a meeting on tldv.io with the transcript visible and click the bookmark
+3. Wait for it to finish, then copy or download
+
+Output format: `[mm:ss] Speaker: text`. Paragraphs TLDV leaves empty are marked `(empty in tl;dv)`. Source: [bookmarklet.js](bookmarklet.js).
+
 ## 🌐 Web Version
 
 ### Features

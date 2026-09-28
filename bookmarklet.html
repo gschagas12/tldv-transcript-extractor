@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TLDV Transcript Bookmarklet</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #2c3e50;
+            margin-top: 0;
+            text-align: center;
+        }
+        .description {
+            margin-bottom: 20px;
+            text-align: center;
+            color: #555;
+        }
+        .bookmarklet {
+            display: block;
+            width: fit-content;
+            margin: 30px auto;
+            background-color: #3498db;
+            color: white;
+            padding: 12px 24px;
+            font-size: 16px;
+            border-radius: 4px;
+            text-decoration: none;
+            cursor: grab;
+        }
+        .bookmarklet[aria-disabled="true"] {
+            background-color: #95a5a6;
+        }
+        .instructions {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            border-left: 4px solid #3498db;
+        }
+        .instructions h3 {
+            margin-top: 0;
+            color: #2c3e50;
+        }
+        .instructions ol {
+            margin-bottom: 0;
+            padding-left: 20px;
+        }
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            font-size: 14px;
+            color: #7f8c8d;
+        }
+        a {
+            color: #3498db;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>TLDV Transcript Bookmarklet</h1>
+        <p class="description">Collect the full transcript of a TLDV meeting in one click, no copying HTML</p>
+
+        <a id="bookmarklet" class="bookmarklet" href="#" aria-disabled="true">Loading…</a>
+
+        <div class="instructions">
+            <h3>Install:</h3>
+            <ol>
+                <li>Show the bookmarks bar (<code>Ctrl+Shift+B</code>)</li>
+                <li>Drag the blue button above onto the bookmarks bar</li>
+            </ol>
+        </div>
+
+        <div class="instructions">
+            <h3>Use:</h3>
+            <ol>
+                <li>Open the meeting on tldv.io with the transcript visible</li>
+                <li>Click the bookmark and wait; the transcript scrolls by itself while a panel shows progress</li>
+                <li>When it finishes, click "Copy" or "Download .txt" in the panel</li>
+            </ol>
+        </div>
+
+        <p>Why this is needed: TLDV only fills in the transcript paragraphs that are near the visible area, so copying the HTML
+            of a long meeting only gets a small part of it. The bookmarklet scrolls through every paragraph and collects the text.
+            It runs only in your browser and sends nothing anywhere. Source: <a href="bookmarklet.js">bookmarklet.js</a>.</p>
+
+        <footer>
+            <p><a href="./">← Back to the HTML extractor</a></p>
+        </footer>
+    </div>
+
+    <script>
+        const link = document.getElementById('bookmarklet');
+        fetch('bookmarklet.js')
+            .then(r => r.text())
+            .then(code => {
+                link.href = 'javascript:' + encodeURIComponent(code);
+                link.textContent = 'tl;dv → transcript';
+                link.removeAttribute('aria-disabled');
+            })
+            .catch(() => { link.textContent = 'Failed to load bookmarklet.js'; });
+        link.addEventListener('click', e => {
+            e.preventDefault();
+            alert('Drag this button to your bookmarks bar, then click it on a tldv.io meeting page.');
+        });
+    </script>
+</body>
+</html>
